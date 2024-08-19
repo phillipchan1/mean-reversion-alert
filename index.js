@@ -69,14 +69,19 @@ async function checkStocks() {
 
     console.log('Qualifying stocks:', qualifyingStocks);
 
-    if (hasArrayChanged(qualifyingStocks)) {
-        await sendEmail(
-            'Qualifying Stocks Update',
-            `The following stocks meet your criteria:\n\n${JSON.stringify(qualifyingStocks, null, 2)}`
-        );
-    } else {
-        console.log('No change in qualifying stocks; email not sent.');
-    }
+    await sendEmail(
+        'Qualifying Stocks Update',
+        `The following stocks meet your criteria:\n\n${JSON.stringify(qualifyingStocks, null, 2)}`
+    );
+
+    // if (hasArrayChanged(qualifyingStocks)) {
+    //     await sendEmail(
+    //         'Qualifying Stocks Update',
+    //         `The following stocks meet your criteria:\n\n${JSON.stringify(qualifyingStocks, null, 2)}`
+    //     );
+    // } else {
+    //     console.log('No change in qualifying stocks; email not sent.');
+    // }
 }
 
 function startStockCheckInterval() {
