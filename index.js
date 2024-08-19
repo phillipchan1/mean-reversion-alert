@@ -61,12 +61,23 @@ async function checkStocks() {
         });
 
         if (i + MAX_SYMBOLS_PER_MINUTE < watchlist.length) {
-            await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
+            await new Promise(resolve => setTimeout(resolve, 60000));
         }
     }
 
     console.log('Qualifying stocks:', qualifyingStocks);
+
+    if (qualifyingStocks.length > 0) {
+        await sendEmail(
+            'Qualifying Stocks Update',
+            `The following stocks meet your criteria:\n\n${JSON.stringify(qualifyingStocks, null, 2)}`
+        );
+    }
 }
 
-// Start the stock checking process
-checkStocks();
+function startStockCheckInterval() {
+    checkStocks();
+    setInterval(checkStocks, CHECK_INTERVAL);
+}
+
+startStockCheckInterval();

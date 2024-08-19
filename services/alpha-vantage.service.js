@@ -72,6 +72,7 @@ async function getStockData(symbol, interval) {
     }
 }
 
+
 module.exports = {
     getRSIData,
     getATRData,
