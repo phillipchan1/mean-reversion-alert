@@ -1,10 +1,11 @@
-const API_KEY = '3UEMP1MCA2F5C6OK'; // Replace with your actual premium API key
-const axios = require('axios');
 const watchlist = require('./watchlist');
 const { getRSIData, getATRData, getDailyStockData, getStockData } = require('./services/alpha-vantage.service');
 const { calculateEMA, determineTrend } = require('./utils/stock-utils');
-const { RSI_PERIOD, EMA_PERIOD, ATR_PERIOD, KELTNER_MULTIPLIER, TIME_INTERVALS, MAX_SYMBOLS_PER_MINUTE, CHECK_INTERVAL } = require('./config');
+const { sendEmail } = require('./services/email.service');
+const { hasArrayChanged } = require('./state-manager');
+// const config = require('./config');
 
+const { RSI_PERIOD, EMA_PERIOD, ATR_PERIOD, KELTNER_MULTIPLIER, TIME_INTERVALS, MAX_SYMBOLS_PER_MINUTE, CHECK_INTERVAL } = require('./config');
 
 async function getKeltnerChannel(symbol, interval, ema_period, atr_period) {
     const prices = await getStockData(symbol, interval);
@@ -62,17 +63,19 @@ async function checkStocks() {
         });
 
         if (i + MAX_SYMBOLS_PER_MINUTE < watchlist.length) {
-            await new Promise(resolve => setTimeout(resolve, 60000));
+            await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 1 minute
         }
     }
 
     console.log('Qualifying stocks:', qualifyingStocks);
 
-    if (qualifyingStocks.length > 0) {
+    if (hasArrayChanged(qualifyingStocks)) {
         await sendEmail(
             'Qualifying Stocks Update',
             `The following stocks meet your criteria:\n\n${JSON.stringify(qualifyingStocks, null, 2)}`
         );
+    } else {
+        console.log('No change in qualifying stocks; email not sent.');
     }
 }
 

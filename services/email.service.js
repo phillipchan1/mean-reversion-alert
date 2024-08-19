@@ -1,5 +1,5 @@
 const postmark = require('postmark');
-const config = require('./config');
+const config = require('../config');
 
 const client = new postmark.ServerClient(config.POSTMARK_API_TOKEN);
 
