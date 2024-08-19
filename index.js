@@ -3,7 +3,8 @@ const axios = require('axios');
 const watchlist = require('./watchlist');
 const { getRSIData, getATRData, getDailyStockData, getStockData } = require('./services/alpha-vantage.service');
 const { calculateEMA, determineTrend } = require('./utils/stock-utils');
-const { RSI_PERIOD, EMA_PERIOD, ATR_PERIOD, KELTNER_MULTIPLIER, TIME_INTERVALS, MAX_SYMBOLS_PER_MINUTE } = require('./config');
+const { RSI_PERIOD, EMA_PERIOD, ATR_PERIOD, KELTNER_MULTIPLIER, TIME_INTERVALS, MAX_SYMBOLS_PER_MINUTE, CHECK_INTERVAL } = require('./config');
+
 
 async function getKeltnerChannel(symbol, interval, ema_period, atr_period) {
     const prices = await getStockData(symbol, interval);
