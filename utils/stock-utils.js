@@ -28,7 +28,29 @@ function determineTrend(dailyPrices) {
     }
 }
 
+function isMarketOpen() {
+    const now = new Date();
+    const currentHour = now.getUTCHours(); // Get current hour in UTC
+    const currentMinute = now.getUTCMinutes(); // Get current minute in UTC
+
+    // Convert market open/close times to UTC (PST is UTC-8, PDT is UTC-7)
+    const marketOpenHour = 13; // 6:30 AM PST = 1:30 PM UTC
+    const marketOpenMinute = 30; // 6:30 AM
+    const marketCloseHour = 20; // 1:00 PM PST = 8:00 PM UTC
+    const marketCloseMinute = 0; // 1:00 PM
+
+    if (
+        (currentHour > marketOpenHour || (currentHour === marketOpenHour && currentMinute >= marketOpenMinute)) &&
+        (currentHour < marketCloseHour || (currentHour === marketCloseHour && currentMinute < marketCloseMinute))
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 module.exports = {
+    isMarketOpen,
     calculateEMA,
-    determineTrend
+    determineTrend,
 };

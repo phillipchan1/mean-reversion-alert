@@ -1,6 +1,6 @@
 const watchlist = require('./watchlist');
 const { getRSIData, getATRData, getDailyStockData, getStockData } = require('./services/alpha-vantage.service');
-const { calculateEMA, determineTrend } = require('./utils/stock-utils');
+const { calculateEMA, determineTrend, isMarketOpen } = require('./utils/stock-utils');
 const { sendEmail } = require('./services/email.service');
 const { hasArrayChanged } = require('./state-manager');
 const http = require('http');
@@ -50,6 +50,11 @@ async function evaluateConditions(symbol, interval1, interval4) {
 }
 
 async function checkStocks() {
+    if (!isMarketOpen()) {
+        console.log('Market is closed; skipping stock check.');
+        return;
+    }
+
     const qualifyingStocks = [];
     for (let i = 0; i < watchlist.length; i += MAX_SYMBOLS_PER_MINUTE) {
         const batch = watchlist.slice(i, i + MAX_SYMBOLS_PER_MINUTE);
