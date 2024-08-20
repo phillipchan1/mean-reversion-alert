@@ -50,6 +50,9 @@ async function evaluateConditions(symbol, interval1, interval4) {
 }
 
 async function checkStocks() {
+    const startTime = new Date();
+    console.log(`Stock check started at ${startTime.toISOString()}`);
+
     if (!isMarketOpen()) {
         console.log('Market is closed; skipping stock check.');
         return;
@@ -83,7 +86,13 @@ async function checkStocks() {
     } else {
         console.log('No change in qualifying stocks; email not sent.');
     }
+
+    const endTime = new Date();
+    const elapsedTime = (endTime - startTime) / 1000;
+    console.log(`Stock check completed at ${endTime.toISOString()}`);
+    console.log(`Total time taken: ${elapsedTime} seconds`);
 }
+
 
 function startStockCheckInterval() {
     checkStocks();
