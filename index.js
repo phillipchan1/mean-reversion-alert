@@ -3,6 +3,7 @@ const { getRSIData, getATRData, getDailyStockData, getStockData } = require('./s
 const { calculateEMA, determineTrend } = require('./utils/stock-utils');
 const { sendEmail } = require('./services/email.service');
 const { hasArrayChanged } = require('./state-manager');
+const http = require('http');
 // const config = require('./config');
 
 const { RSI_PERIOD, EMA_PERIOD, ATR_PERIOD, KELTNER_MULTIPLIER, TIME_INTERVALS, MAX_SYMBOLS_PER_MINUTE, CHECK_INTERVAL } = require('./config');
@@ -84,4 +85,13 @@ function startStockCheckInterval() {
     setInterval(checkStocks, CHECK_INTERVAL);
 }
 
-startStockCheckInterval();
+const port = process.env.PORT || 8080;
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('The mean-reversion-alerter app is running\n');
+});
+
+server.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+    startStockCheckInterval();
+});
